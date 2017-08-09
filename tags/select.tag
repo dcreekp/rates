@@ -13,7 +13,7 @@
     <li each="{ options }" no-reorder
          onclick="{ parent.select }"
          class="c-card__item { 'c-card__item--active': selected, 'c-card__item--disabled': disabled, 'c-card__item--hover': active }">
-      { symbol } - { name }
+      { symbol }
     </li>
   </ul>
 
@@ -125,6 +125,7 @@
     }
 
     this.open = () => {
+      this.options = opts.select.options
       opts.select.isvisible = true
       this.trigger('open')
     }
@@ -140,7 +141,7 @@
       opts.select.options.forEach(i => i.selected = false)
       e.item.selected = true
       applyFieldText()
-      this.filterOptions()
+      //this.filterOptions()
       opts.select.isvisible = false
       this.trigger('select', e.item)
     }
