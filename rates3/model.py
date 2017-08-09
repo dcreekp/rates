@@ -20,12 +20,6 @@ class Oanda(object):
         'GBP_JPY', 'USD_TRY', 'EUR_CHF', 'USD_CNH', 'AUD_SGD'
         ]
 
-    SYMBOLS = [
-        'USD', 'EUR', 'JPY', 'GBP', 'AUD', 'CAD', 'CHF', 'CNH', 'CZK', 'DKK',
-        'HKD', 'HUF', 'INR',  'MXN', 'NOK', 'NZD', 'PLN', 'SAR', 'SEK', 'SGD',
-        'THB', 'TRY',  'ZAR'
-        ]
-
     NAMES = {
         'USD': 'U.S. Dollar',
         'EUR': 'Euro',
@@ -64,6 +58,7 @@ class Oanda(object):
         self.base = base.upper()
         self.instruments = [i for i in self.INST if self.base in i]
         self.rates = self.collect_rates()
+        self.quotes = self.collect_symbols()
 
     def collect_rates(self):
         rates = {self.base: 1}
@@ -73,7 +68,7 @@ class Oanda(object):
 
     def collect_symbols(self):
         return [
-            {symbol: self.NAMES[symbol]}
+            {'text': ' - '.join([symbol, self.NAMES[symbol]])}
             for symbol in self.NAMES if symbol in self.rates
             ]
 

@@ -4,11 +4,10 @@ from . import model
 
 @App.json(model=model.Oanda)
 def view_oanda_rates(self, request):
-    print(self.collect_symbols())
     return {
         'base': self.base,
         'rates': self.rates,
-        'symbols': self.collect_symbols(),
+        'quotes': self.quotes,
         'uri': request.link(self)
         }
 

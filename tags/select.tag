@@ -13,7 +13,7 @@
     <li each="{ options }" no-reorder
          onclick="{ parent.select }"
          class="c-card__item { 'c-card__item--active': selected, 'c-card__item--disabled': disabled, 'c-card__item--hover': active }">
-      { symbol }
+      { text }
     </li>
   </ul>
 
@@ -30,7 +30,7 @@
       for (let i = 0; i < opts.select.options.length; i++) {
         let item = opts.select.options[i]
         if (item.selected) {
-          this.refs.selectfield.value = item.symbol
+          this.refs.selectfield.value = item.text
           break
         }
       }
