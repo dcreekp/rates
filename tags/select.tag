@@ -1,4 +1,4 @@
-<rg-select>
+<selector>
 
   <input type="{ opts.select.filter ? 'search' : 'text' }"
          ref="selectfield"
@@ -171,4 +171,4 @@
 
   </style>
 
-</rg-select>
+</selector>
