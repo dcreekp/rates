@@ -2,6 +2,7 @@ import riot from 'riot'
 import 'whatwg-fetch'
 import './tags/current-rates.tag'
 import './tags/select.tag'
+import './tags/converter.tag'
 
 
 var currentRatesCallback = function(currentRatesTag, base = 'GBP') {
@@ -13,4 +14,8 @@ var currentRatesCallback = function(currentRatesTag, base = 'GBP') {
   })
 }
 
+var base = 'GBP'
+var rate = 2
+
 riot.mount('current-rates', {callback:currentRatesCallback})
+riot.mount('converter', {base:base, rate:rate})
