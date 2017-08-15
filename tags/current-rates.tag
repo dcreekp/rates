@@ -20,8 +20,13 @@
       opts.rates = data.rates
       opts.base = data.base
       this.update()
+      var d = new Date;
+      var now = new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours())
+      now = now.toLocaleDateString() + ' ' + now.toLocaleTimeString()
+      //const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       this.convert = {
         base: opts.base,
+        now: now,
       }
       riot.update('display', this.convert)
 
@@ -54,11 +59,14 @@
 <display>
 
   <h2 show={!opts.value}>British Pound Sterling</h2>
-  <h2 show={opts.value}>{opts.amount}{opts.quoting} is {opts.value}{opts.base}</h2>
+  <h2 show={opts.value}>{opts.amount}{opts.quote} is {opts.value}{opts.base}</h2>
   <p show={!opts.value}>currency exchange calculator</p>
+  <p show={opts.value}>{opts.now}</p>
+
 
   <script>
     this.on('convert', (data) => {
+      data.quote = data.quoting
       this.opts = data
     })
   </script>
