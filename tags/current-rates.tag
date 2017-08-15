@@ -9,26 +9,26 @@
          type="submit"
          ref="button"
          value="convert to { opts.base }"
-         onclick={ check }>
+         onclick={ convert }>
 
 
   <script>
+    var now
     this.on('mount', () => {
+      let d = new Date
+      now = new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours())
+      now = now.toLocaleDateString() + ' ' + now.toLocaleTimeString()
+      //const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       opts.callback(this)
     })
     this.on('data_loaded', (data) => {
-      opts.rates = data.rates
       opts.base = data.base
       this.update()
-      var d = new Date;
-      var now = new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours())
-      now = now.toLocaleDateString() + ' ' + now.toLocaleTimeString()
-      //const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      this.convert = {
+      this.current = {
         base: opts.base,
         now: now,
       }
-      riot.update('display', this.convert)
+      riot.update('display', this.current)
 
       let select = {
         placeholder: 'select a currency',
@@ -40,15 +40,15 @@
 
       quoting[0].on('select', (item) => {
         let selected = item.text.slice(0,3)
-        this.convert.quoting = selected
-        this.convert.rate = opts.rates[selected]
+        this.current.quoting = selected
+        this.current.rate = data.rates[selected]
         this.update()
       })
 
-    this.check = () => {
-      this.convert.amount = this.refs.amount.value
-      this.convert.value = (this.convert.amount * this.convert.rate).toFixed(2)
-      this.tags.display.trigger('convert', this.convert)
+    this.convert = () => {
+      this.current.amount = this.refs.amount.value
+      this.current.value = (this.current.amount * this.current.rate).toFixed(2)
+      this.tags.display.trigger('display', this.current)
     }
 
     })
@@ -65,7 +65,7 @@
 
 
   <script>
-    this.on('convert', (data) => {
+    this.on('display', (data) => {
       data.quote = data.quoting
       this.opts = data
     })
