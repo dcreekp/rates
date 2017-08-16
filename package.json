@@ -20,6 +20,7 @@
     "webpack-dev-server": "^2.6.1"
   },
   "dependencies": {
+    "moment-timezone": "^0.5.13",
     "riot": "^3.6.1",
     "whatwg-fetch": "^2.0.3"
   }
