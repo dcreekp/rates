@@ -57,8 +57,7 @@ class Oanda(object):
     def __init__(self, base):
         self.base = base.upper()
         self.instruments = [i for i in self.INST if self.base in i]
-        self.data = self.rates = self.collect_data()
-        self.quotes = self.collect_symbols()
+        self.data = self.collect_data()
 
     def collect_data(self):
         data = {
@@ -73,12 +72,6 @@ class Oanda(object):
                 'name': self.NAMES[symbol]
                 }
         return data
-
-    def collect_symbols(self):
-        return [
-            {'text': ' - '.join([symbol, self.NAMES[symbol]])}
-            for symbol in self.NAMES if symbol in self.rates
-            ]
 
     def api_instruments(self):
         params = {'instruments': ','.join(self.instruments)}

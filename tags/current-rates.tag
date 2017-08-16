@@ -22,6 +22,7 @@
       opts.callback(this)
     })
     this.on('data_loaded', (data) => {
+      let index = data.index
       opts.base = data.base
       this.update()
       this.current = {
@@ -30,10 +31,14 @@
       }
       riot.update('display', this.current)
 
+      let quotes = []
+      for (let symbol in index) {
+        quotes.push({'text': symbol + ' - ' + index[symbol].name})
+      }
       let select = {
         placeholder: 'select a currency',
         filter: 'text',
-        options: data.quotes
+        options: quotes
       }
 
       let quoting = riot.mount('selector', {select:select})
@@ -41,7 +46,7 @@
       quoting[0].on('select', (item) => {
         let selected = item.text.slice(0,3)
         this.current.quoting = selected
-        this.current.rate = data.index[selected].rate
+        this.current.rate = index[selected].rate
         this.update()
       })
 
