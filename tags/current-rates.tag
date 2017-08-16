@@ -24,12 +24,12 @@
     this.on('data_loaded', (data) => {
       let index = data.index
       opts.base = data.base
-      this.update()
       this.current = {
+        b_name: index[data.base].name,
         base: opts.base,
         now: now,
       }
-      riot.update('display', this.current)
+      this.update()
 
       let quotes = []
       for (let symbol in index) {
@@ -46,6 +46,7 @@
       quoting[0].on('select', (item) => {
         let selected = item.text.slice(0,3)
         this.current.quoting = selected
+        this.current.qg_name = index[selected].name
         this.current.rate = index[selected].rate
         this.update()
       })
@@ -63,16 +64,20 @@
 
 <display>
 
-  <h2 show={!opts.value}>British Pound Sterling</h2>
-  <h2 show={opts.value}>{opts.amount}{opts.quote} is {opts.value}{opts.base}</h2>
+  <h2 show={!opts.value}>{ opts.b_name }</h2>
+  <h3 show={opts.value}>{opts.amount} {opts.q_name}({opts.quote}) is {opts.value} {opts.b_name}({opts.base})</h3>
   <p show={!opts.value}>currency exchange calculator</p>
   <p show={opts.value}>{opts.now}</p>
 
 
   <script>
-    this.on('display', (data) => {
-      data.quote = data.quoting
-      this.opts = data
+    this.on('display', (current) => {
+      current.quote = current.quoting
+      current.q_name = current.qg_name
+      this.opts = current
+    })
+    this.on('update', () => {
+      this.opts = this.parent.current
     })
   </script>
 
