@@ -50,9 +50,9 @@ def oanda_jpy():
 def test_oanda_model(oanda_jpy):
     assert oanda_jpy.base == 'JPY'
 
-def test_oanda_collect_rates(oanda_jpy):
-    rates = oanda_jpy.rates
-    assert type(rates) == dict
+def test_oanda_collect_data(oanda_jpy):
+    data = oanda_jpy.data
+    assert type(data) == dict
 
 def test_oanda_base_rate(oanda_jpy):
     assert str(oanda_jpy.base_rate('112.761', '112.894')) == '112.828'

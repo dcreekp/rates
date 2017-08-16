@@ -41,7 +41,7 @@
       quoting[0].on('select', (item) => {
         let selected = item.text.slice(0,3)
         this.current.quoting = selected
-        this.current.rate = data.rates[selected]
+        this.current.rate = data.index[selected].rate
         this.update()
       })
 

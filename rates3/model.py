@@ -57,14 +57,22 @@ class Oanda(object):
     def __init__(self, base):
         self.base = base.upper()
         self.instruments = [i for i in self.INST if self.base in i]
-        self.rates = self.collect_rates()
+        self.data = self.rates = self.collect_data()
         self.quotes = self.collect_symbols()
 
-    def collect_rates(self):
-        rates = {self.base: 1}
+    def collect_data(self):
+        data = {
+            self.base: {
+                'rate': 1,
+                'name': self.NAMES[self.base]
+                }
+            }
         for symbol, rate in self.parse_rates(self.api_instruments()):
-            rates[symbol] = rate
-        return rates
+            data[symbol] = {
+                'rate': rate,
+                'name': self.NAMES[symbol]
+                }
+        return data
 
     def collect_symbols(self):
         return [
@@ -76,15 +84,6 @@ class Oanda(object):
         params = {'instruments': ','.join(self.instruments)}
         url = self.URL % self.ACCOUNT_ID
         return requests.get(url, headers=self.HEADER, params=params)
-
-        rates = [
-            {'symbol': self.base, 'rate':'1', 'name':self.NAMES[self.base]}
-        ]
-        for symbol, rate in self.parse_rates(self.api_instruments()):
-            rates.append(
-                 {'symbol': symbol, 'rate': rate, 'name':self.NAMES[symbol]}
-            )
-        return rates
 
     def parse_rates(self, response):
         prices = response.json()['prices']

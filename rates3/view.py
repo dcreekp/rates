@@ -6,7 +6,7 @@ from . import model
 def view_oanda_rates(self, request):
     return {
         'base': self.base,
-        'rates': self.rates,
+        'index': self.data,
         'quotes': self.quotes,
         'uri': request.link(self)
         }
