@@ -4,11 +4,11 @@ import './tags/current-rates.tag'
 import './tags/select.tag'
 
 
-var currentRatesCallback = function(currentRatesTag, base = 'GBP') {
+var currentRatesCallback = (currentRatesTag, base = 'GBP') => {
   var url = location.protocol + '//' + location.host + '/api/oanda/' + base;
-  fetch(url).then(function(response) {
+  fetch(url).then((response) => {
     return response.json();
-  }).then(function(data) {
+  }).then((data) => {
     currentRatesTag.trigger('data_loaded', data);
   })
 }
