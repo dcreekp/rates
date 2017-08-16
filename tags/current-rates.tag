@@ -1,10 +1,11 @@
 <current-rates>
-  <display></display>
-  <input type="text"
+  <display show={ opts.base }></display>
+  <input show={ opts.base }
+         type="text"
          ref="amount"
          placeholder="enter amount"
          class="field">
-  <selector></selector>
+  <selector show={ opts.base }></selector>
   <input show={ opts.base }
          type="submit"
          ref="button"
