@@ -9,7 +9,7 @@
   <input show={ opts.base }
          type="submit"
          ref="button"
-         value="convert to { opts.base }"
+         value="&#8608; { opts.base }"
          onclick={ convert }>
 
 
@@ -66,15 +66,18 @@
 <display>
 
   <h2 show={!opts.value}>{ opts.b_name }</h2>
-  <h3 show={opts.value}>{opts.amount} {opts.q_name}({opts.quote}) is {opts.value} {opts.b_name}({opts.base})</h3>
+  <h3 show={opts.value}>{opts.amount} {opts.q_name} is {opts.value} {opts.b_name}</h3>
   <p show={!opts.value}>currency exchange calculator</p>
   <p show={opts.value}>{opts.now}</p>
 
 
   <script>
     this.on('display', (current) => {
-      current.quote = current.quoting
+      let prop = { style: "currency", currency: current.quoting}
+      current.amount = (current.amount * 1).toLocaleString('en', prop)
       current.q_name = current.qg_name
+      prop.currency = current.base
+      current.value = (current.value * 1).toLocaleString('en', prop)
       this.opts = current
     })
     this.on('update', () => {
