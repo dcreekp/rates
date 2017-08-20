@@ -7,11 +7,11 @@
          class="field">
   <selector show={ opts.base }></selector>
   <input show={ opts.base }
+         class="c-button c-button--success"
          type="submit"
          ref="button"
          value="&#8608; { opts.base }"
          onclick={ convert }>
-
 
   <script>
     var now
