@@ -15,8 +15,8 @@ def run():
 def run_auto():
     morepath.autoscan()
 
-    index = FileApp('static/index.html')
-    static = DirectoryApp('static')
+    index = FileApp('index.html')
+    dist = DirectoryApp('dist')
     App.commit()
     app = App()
 
@@ -25,8 +25,8 @@ def run_auto():
         popped = request.path_info_pop()
         if popped == 'api':
             return request.get_response(app)
-        elif popped == 'static':
-            return request.get_response(static)
+        elif popped == 'dist':
+            return request.get_response(dist)
         elif popped == '':
             return request.get_response(index)
         else:

@@ -21,4 +21,3 @@ docs/_build/
 
 # Javascript builds
 node_modules/
-static/bundle.js

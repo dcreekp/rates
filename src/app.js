@@ -1,6 +1,7 @@
 import riot from 'riot'
 import moment from 'moment-timezone'
 import 'whatwg-fetch'
+import './css/blaze.min.css'
 import './tags/current-rates.tag'
 import './tags/select.tag'
 
