@@ -20,7 +20,7 @@
       now = new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours())
       now = now.toLocaleDateString() + ' ' + now.toLocaleTimeString()
       //const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      opts.callback(this, opts.currency)
+      opts.callback(this)
     })
     this.on('data_loaded', (data) => {
       let index = data.index

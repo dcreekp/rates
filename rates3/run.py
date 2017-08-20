@@ -27,8 +27,11 @@ def run_auto():
             return request.get_response(app)
         elif popped == 'static':
             return request.get_response(static)
-        else:
+        elif popped == '':
             return request.get_response(index)
+        else:
+            return HTTPNotFound()
+
 
     run_simple('localhost', 8000, DebuggedApplication(morepath_with_static),
                use_reloader=True)
