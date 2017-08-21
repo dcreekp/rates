@@ -1,18 +1,27 @@
 <current-rates>
-  <display show={ opts.base }></display>
-  <input show={ opts.base }
-         type="text"
-         ref="amount"
-         placeholder="enter amount"
-         class="field">
-  <selector show={ opts.base }></selector>
-  <input show={ opts.base }
-         class="c-button c-button--success"
-         type="submit"
-         ref="button"
-         value="&#8608; { opts.base }"
-         onclick={ convert }>
-
+  <div class="o-grid">
+    <display show={ opts.base }></display>
+  </div>
+  <div class="o-grid">
+    <div class="o-grid__cell">
+      <input show={ opts.base }
+             type="text"
+             ref="amount"
+             placeholder="enter amount"
+             class="field">
+    </div>
+    <div class="o-grid__cell">
+      <selector show={ opts.base }></selector>
+    </div>
+    <div class="o-grid__cell">
+      <input show={ opts.base }
+             class="c-button c-button--success"
+             type="submit"
+             ref="button"
+             value="&#8608; { opts.base }"
+             onclick={ convert }>
+    </div>
+  </div>
   <script>
     var now
     this.on('mount', () => {
@@ -20,7 +29,7 @@
       now = new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours())
       now = now.toLocaleDateString() + ' ' + now.toLocaleTimeString()
       //const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      opts.callback(this)
+      opts.callback(this, opts.base)
     })
     this.on('data_loaded', (data) => {
       let index = data.index
