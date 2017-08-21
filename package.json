@@ -25,6 +25,7 @@
   "dependencies": {
     "moment-timezone": "^0.5.13",
     "riot": "^3.6.1",
+    "riot-route": "^3.1.2",
     "whatwg-fetch": "^2.0.3"
   }
 }
