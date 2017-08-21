@@ -29,6 +29,9 @@ route((path) => {
         {callback:currentRatesCallback, base:path}
         )[0]
     }
+  } else if (path === '') {
+    currentRates.unmount(true)
+    currentRates = null
   }
 })
 
