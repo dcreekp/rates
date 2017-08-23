@@ -84,11 +84,11 @@ class Oanda(object):
             base, quote = i['instrument'].split('_')
             if base == self.base:
                 yield (quote,
-                       str(self.quote_rate(i['closeoutBid'], i['closeoutAsk']))
+                       str(self.base_rate(i['closeoutBid'], i['closeoutAsk']))
                 )
             else:
                 yield (base,
-                       str(self.base_rate(i['closeoutBid'], i['closeoutAsk']))
+                       str(self.quote_rate(i['closeoutBid'], i['closeoutAsk']))
                 )
 
     def base_rate(self, bid, ask):

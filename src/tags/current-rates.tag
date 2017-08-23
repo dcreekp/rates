@@ -11,15 +11,15 @@
              class="field">
     </div>
     <div class="o-grid__cell">
-      <selector show={ opts.base }></selector>
-    </div>
-    <div class="o-grid__cell">
       <input show={ opts.base }
              class="c-button c-button--success"
              type="submit"
              ref="button"
-             value="&#8608; { opts.base }"
+             value="&#8608;"
              onclick={ convert }>
+    </div>
+    <div class="o-grid__cell">
+      <selector show={ opts.base }></selector>
     </div>
   </div>
   <script>
@@ -75,17 +75,17 @@
 <display>
 
   <h2 show={!opts.value}>{ opts.b_name }</h2>
-  <h3 show={opts.value}>{opts.amount} {opts.q_name} is {opts.value} {opts.b_name}</h3>
+  <h3 show={opts.value}>{opts.amount} {opts.b_name} is {opts.value} {opts.q_name}</h3>
   <p show={!opts.value}>currency exchange calculator</p>
   <p show={opts.value}>{opts.now}</p>
 
 
   <script>
     this.on('display', (current) => {
-      let prop = { style: "currency", currency: current.quoting}
+      let prop = { style: "currency", currency: current.base}
       current.amount = (current.amount * 1).toLocaleString('en', prop)
       current.q_name = current.qg_name
-      prop.currency = current.base
+      prop.currency = current.quoting
       current.value = (current.value * 1).toLocaleString('en', prop)
       this.opts = current
     })
