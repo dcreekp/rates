@@ -5,8 +5,11 @@ from . import model
 @App.json(model=model.Oanda)
 def view_oanda_rates(self, request):
     return {
-        'base': self.base,
-        'index': self.data,
+        'data': {
+            'base': self.base,
+            'quotes': self.quotes,
+            'bases': self.bases
+            },
         'uri': request.link(self)
         }
 

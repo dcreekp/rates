@@ -31,24 +31,25 @@
       //const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       opts.callback(this, opts.base)
     })
-    this.on('data_loaded', (data) => {
-      let index = data.index
-      opts.base = data.base
+    this.on('data_loaded', (response) => {
+      let quotes = response.data.quotes,
+          bases = response.data.bases;
+      opts.base = response.data.base
       this.current = {
-        b_name: index[data.base].name,
+        b_name: quotes[opts.base].name,
         base: opts.base,
         now: now,
       }
       this.update()
 
-      let quotes = []
-      for (let symbol in index) {
-        quotes.push({'text': symbol + ' - ' + index[symbol].name})
+      let to = []
+      for (let symbol in quotes) {
+        to.push({'text': symbol + ' - ' + quotes[symbol].name})
       }
       let select = {
         placeholder: 'select a currency',
         filter: 'text',
-        options: quotes
+        options: to
       }
 
       let quoting = riot.mount('selector', {select:select})
@@ -56,14 +57,14 @@
       quoting[0].on('select', (item) => {
         let selected = item.text.slice(0,3)
         this.current.quoting = selected
-        this.current.qg_name = index[selected].name
-        this.current.rate = index[selected].rate
+        this.current.qg_name = quotes[selected].name
+        this.current.rate = quotes[selected].rate
         this.update()
       })
 
     this.convert = () => {
       this.current.amount = this.refs.amount.value
-      this.current.value = (this.current.amount * this.current.rate).toFixed(2)
+      this.current.value = (this.current.amount * this.current.rate)
       this.tags.display.trigger('display', this.current)
     }
 
