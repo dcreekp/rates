@@ -11,6 +11,9 @@
              class="field">
     </div>
     <div class="o-grid__cell">
+      <selector id="from" show={ opts.base }></selector>
+    </div>
+    <div class="o-grid__cell">
       <input show={ opts.base }
              class="c-button c-button--success"
              type="submit"
@@ -19,7 +22,7 @@
              onclick={ convert }>
     </div>
     <div class="o-grid__cell">
-      <selector show={ opts.base }></selector>
+      <selector id="to" show={ opts.base }></selector>
     </div>
   </div>
   <script>
@@ -42,17 +45,28 @@
       }
       this.update()
 
+      let from = []
+      for (let i=0; i<bases.length; i++) {
+        from.push({'text': bases[i].symbol + ' - ' + bases[i].name})
+      }
+      let select_from = {
+        placeholder: 'select a currency',
+        filter: 'text',
+        options: from
+      }
       let to = []
       for (let symbol in quotes) {
         to.push({'text': symbol + ' - ' + quotes[symbol].name})
       }
-      let select = {
+      let select_to = {
         placeholder: 'select a currency',
         filter: 'text',
         options: to
       }
 
-      let quoting = riot.mount('selector', {select:select})
+      let rebase = riot.mount('selector#from', {select:select_from})
+
+      let quoting = riot.mount('selector#to', {select:select_to})
 
       quoting[0].on('select', (item) => {
         let selected = item.text.slice(0,3)

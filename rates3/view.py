@@ -8,7 +8,6 @@ def view_oanda_rates(self, request):
         'data': {
             'base': self.base,
             'quotes': self.quotes,
-            'bases': self.bases
             },
         'uri': request.link(self)
         }
