@@ -43,11 +43,12 @@
         base: opts.base,
         now: now,
       }
-      this.update()
 
       let from = []
       for (let i=0; i<bases.length; i++) {
-        from.push({'text': bases[i].symbol + ' - ' + bases[i].name})
+        from.push({'text': bases[i].symbol + ' - ' + bases[i].name,
+                   'symbol': bases[i].symbol
+                  })
       }
       let select_from = {
         placeholder: 'select a currency',
@@ -56,7 +57,9 @@
       }
       let to = []
       for (let symbol in quotes) {
-        to.push({'text': symbol + ' - ' + quotes[symbol].name})
+        to.push({'text': symbol + ' - ' + quotes[symbol].name,
+                 'symbol': symbol
+                })
       }
       let select_to = {
         placeholder: 'select a currency',
@@ -64,12 +67,19 @@
         options: to
       }
 
-      let rebase = riot.mount('selector#from', {select:select_from})
-
+      let rebase = riot.mount('selector#from',
+                              {select:select_from, current: opts.base})
       let quoting = riot.mount('selector#to', {select:select_to})
 
+      this.update()
+
+      rebase[0].on('select', (item) => {
+        let selected = item.symbol
+        opts.callback(this, selected)
+      })
+
       quoting[0].on('select', (item) => {
-        let selected = item.text.slice(0,3)
+        let selected = item.symbol
         this.current.quoting = selected
         this.current.qg_name = quotes[selected].name
         this.current.rate = quotes[selected].rate

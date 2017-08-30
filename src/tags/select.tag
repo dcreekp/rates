@@ -36,6 +36,14 @@
       }
     }
 
+    const setCurrentChoice = (choice) => {
+      let item = opts.select.options.find(item => item.symbol === choice)
+      if (item) {
+        item.selected = true
+        this.refs.selectfield.value = item.text
+      }
+    }
+
     this.filterOptions = () => {
       this.options = opts.select.options
       if (opts.select.filter)
@@ -150,6 +158,7 @@
       applyFieldText()
       this.filterOptions()
       document.addEventListener('click', handleClickOutside)
+      if (opts.current) setCurrentChoice(opts.current)
       this.update()
     })
 
