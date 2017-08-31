@@ -26,6 +26,7 @@
     </div>
   </div>
   <script>
+    import route from 'riot-route'
     var now
     this.on('mount', () => {
       let d = new Date
@@ -75,7 +76,7 @@
 
       rebase[0].on('select', (item) => {
         let selected = item.symbol
-        opts.callback(this, selected)
+        route(selected)
       })
 
       quoting[0].on('select', (item) => {
