@@ -46,17 +46,17 @@ var currentRatesCallback = (tag, base) => {
 
 var currentRates = null
 
-route((path) => {
-  if (path.length === 3) {
+route((base) => {
+  if (base.length === 3) {
     if (currentRates) {
-      currentRates = currentRatesCallback(currentRates, path)
+      currentRates = currentRatesCallback(currentRates, base)
     } else {
       currentRates = riot.mount(
         'current-rates',
-        {callback:currentRatesCallback, base:path}
+        {callback:currentRatesCallback, base:base}
         )[0]
     }
-  } else if (path === '') {
+  } else if (base === '') {
     currentRates.unmount(true)
     currentRates = null
   }

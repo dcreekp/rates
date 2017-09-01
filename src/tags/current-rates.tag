@@ -75,7 +75,7 @@
       this.update()
 
       rebase[0].on('select', (item) => {
-        let selected = item.symbol
+        let selected = item.symbol.toLowerCase()
         route(selected)
       })
 
