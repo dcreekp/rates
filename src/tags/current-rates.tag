@@ -33,14 +33,22 @@
       now = new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours())
       now = now.toLocaleDateString() + ' ' + now.toLocaleTimeString()
       //const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      opts.callback(this, opts.base)
+      opts.callback(this, opts.base, opts.quote, opts.amount)
     })
     this.on('data_loaded', (response) => {
       //console.log('loaded', response.data)
       const quotes = response.data.quotes,
           bases = response.data.bases,
-          quote = response.data.quote;
+          quote = response.data.quote,
+          amount = response.data.amount;
       opts.base = response.data.base
+
+      this.convert = () => {
+        this.current.amount = this.refs.amount.value
+        this.current.value = (this.current.amount * this.current.rate)
+        this.tags.display.trigger('display', this.current)
+      }
+
       this.current = {
         b_name: quotes[opts.base].name,
         base: opts.base,
@@ -50,6 +58,12 @@
         this.current.quoting = quote
         this.current.qg_name = quotes[quote].name
         this.current.rate = quotes[quote].rate
+      }
+
+      if (amount) {
+        //console.log('amountful')
+        this.refs.amount.value = amount * 1
+        this.convert()
       }
 
       let from = []
@@ -91,19 +105,7 @@
         let selected = item.symbol
         //console.log('quote', this.current)
         route(opts.base + '/' + selected)
-        //this.current.quoting = selected
-        //this.current.qg_name = quotes[selected].name
-        //this.current.rate = quotes[selected].rate
-        //this.tags.display.trigger('update')
-        //this.update()
       })
-
-    this.convert = () => {
-      this.current.amount = this.refs.amount.value
-      this.current.value = (this.current.amount * this.current.rate)
-      this.tags.display.trigger('display', this.current)
-    }
-
     })
   </script>
 
