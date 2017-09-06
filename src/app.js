@@ -33,12 +33,13 @@ const bases = [
   {'symbol':'ZAR', 'name':'South African Rand'}
 ]
 
-var currentRatesCallback = (tag, base) => {
+var currentRatesCallback = (tag, base, quote = null) => {
   let url = location.protocol + '//' + location.host + '/api/oanda/' + base;
   fetch(url).then((response) => {
     return response.json();
   }).then((data) => {
     data.data.bases = bases
+    data.data.quote = quote
     tag.trigger('data_loaded', data);
   })
   return tag
@@ -47,6 +48,7 @@ var currentRatesCallback = (tag, base) => {
 var currentRates = null
 
 route((base) => {
+  //console.log('in base')
   if (base.length === 3) {
     if (currentRates) {
       currentRates = currentRatesCallback(currentRates, base)
@@ -56,11 +58,25 @@ route((base) => {
         {callback:currentRatesCallback, base:base}
         )[0]
     }
-  } else if (base === '') {
+  } else if (base === '' && currentRates !== null) {
     currentRates.unmount(true)
     currentRates = null
   }
 })
 
-route.base('/')
+route((base, quote) => {
+  //console.log('in base quote', currentRates.opts.base)
+  if (quote === null) {
+    route(base)
+  } else if (currentRates) {
+    currentRates = currentRatesCallback(currentRates, base, quote)
+  } else if (!currentRates) {
+    currentRates = riot.mount(
+      'current-rates',
+      {callback:currentRatesCallback, base:base, quote:quote}
+      )[0]
+  }
+})
+
+//route.base('/')
 route.start(true)

@@ -36,13 +36,20 @@
       opts.callback(this, opts.base)
     })
     this.on('data_loaded', (response) => {
-      let quotes = response.data.quotes,
-          bases = response.data.bases;
+      //console.log('loaded', response.data)
+      const quotes = response.data.quotes,
+          bases = response.data.bases,
+          quote = response.data.quote;
       opts.base = response.data.base
       this.current = {
         b_name: quotes[opts.base].name,
         base: opts.base,
         now: now,
+      }
+      if (quote) {
+        this.current.quoting = quote
+        this.current.qg_name = quotes[quote].name
+        this.current.rate = quotes[quote].rate
       }
 
       let from = []
@@ -70,21 +77,25 @@
 
       let rebase = riot.mount('selector#from',
                               {select:select_from, current: opts.base})
-      let quoting = riot.mount('selector#to', {select:select_to})
+      let quoting = riot.mount('selector#to',
+                               {select:select_to, current: quote})
 
       this.update()
 
       rebase[0].on('select', (item) => {
-        let selected = item.symbol.toLowerCase()
+        let selected = item.symbol
         route(selected)
       })
 
       quoting[0].on('select', (item) => {
         let selected = item.symbol
-        this.current.quoting = selected
-        this.current.qg_name = quotes[selected].name
-        this.current.rate = quotes[selected].rate
-        this.update()
+        //console.log('quote', this.current)
+        route(opts.base + '/' + selected)
+        //this.current.quoting = selected
+        //this.current.qg_name = quotes[selected].name
+        //this.current.rate = quotes[selected].rate
+        //this.tags.display.trigger('update')
+        //this.update()
       })
 
     this.convert = () => {
