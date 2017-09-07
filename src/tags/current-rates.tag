@@ -36,7 +36,6 @@
       opts.callback(this, opts.base, opts.quote, opts.amount)
     })
     this.on('data_loaded', (response) => {
-      //console.log('loaded', response.data)
       const quotes = response.data.quotes,
           bases = response.data.bases,
           quote = response.data.quote,
@@ -48,20 +47,18 @@
         this.current.value = (this.current.amount * this.current.rate)
         this.tags.display.trigger('display', this.current)
       }
-
       this.current = {
         b_name: quotes[opts.base].name,
         base: opts.base,
         now: now,
       }
+
       if (quote) {
         this.current.quoting = quote
         this.current.qg_name = quotes[quote].name
         this.current.rate = quotes[quote].rate
       }
-
       if (amount) {
-        //console.log('amountful')
         this.refs.amount.value = amount * 1
         this.convert()
       }
@@ -97,14 +94,26 @@
       this.update()
 
       rebase[0].on('select', (item) => {
-        let selected = item.symbol
-        route(selected)
+        let selected = item.symbol,
+            quote_selected = quoting[0].opts.current,
+            amount = this.refs.amount.value;
+        if (amount && quote_selected) {
+          route(selected + '/' + quote_selected + '/' + amount)
+        } else if (quote_selected) {
+          route(selected + '/' + quote_selected)
+        } else {
+          route(selected)
+        }
       })
 
       quoting[0].on('select', (item) => {
-        let selected = item.symbol
-        //console.log('quote', this.current)
-        route(opts.base + '/' + selected)
+        let selected = item.symbol,
+            amount = this.refs.amount.value;
+        if (amount) {
+          route(opts.base + '/' + selected + '/' + amount)
+        } else {
+          route(opts.base + '/' + selected)
+        }
       })
     })
   </script>

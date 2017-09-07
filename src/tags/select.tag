@@ -36,14 +36,6 @@
       }
     }
 
-    const setCurrentChoice = (choice) => {
-      let item = opts.select.options.find(item => item.symbol === choice)
-      if (item) {
-        item.selected = true
-        this.refs.selectfield.value = item.text
-      }
-    }
-
     this.filterOptions = () => {
       this.options = opts.select.options
       if (opts.select.filter)
@@ -146,19 +138,28 @@
     }
 
     this.select = e => {
-      opts.select.options.forEach(i => i.selected = false)
-      e.item.selected = true
-      applyFieldText()
+      //opts.select.options.forEach(i => i.selected = false)
+      //e.item.selected = true
+      //applyFieldText()
       //this.filterOptions()
-      opts.select.isvisible = false
+      //opts.select.isvisible = false
       this.trigger('select', e.item)
     }
 
+    const setCurrentChoice = (symbol) => {
+      let item = opts.select.options.find(item => item.symbol === symbol)
+      if (item) {
+        opts.select.options.forEach(i => i.selected = false)
+        item.selected = true
+        opts.select.isvisible = false
+      }
+    }
+
     this.on('mount', () => {
+      if (opts.current) setCurrentChoice(opts.current)
       applyFieldText()
       this.filterOptions()
       document.addEventListener('click', handleClickOutside)
-      if (opts.current) setCurrentChoice(opts.current)
       this.update()
     })
 

@@ -51,7 +51,6 @@ var currentRates = null
 // needs vaidation checks for base quote amount
 
 route((base, quote, amount) => {
-  console.log('in base quote')//, currentRates.opts.base, quote)
   if (currentRates) {
     currentRates = currentRatesCallback(currentRates, base, quote, amount)
   } else if (!currentRates) {
