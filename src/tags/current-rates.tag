@@ -63,27 +63,26 @@
         this.convert()
       }
 
-      let from = []
-      for (let i=0; i<bases.length; i++) {
-        from.push({'text': bases[i].symbol + ' - ' + bases[i].name,
-                   'symbol': bases[i].symbol
-                  })
+      const selectorOptions = (subset = null) => {
+        let selection = []
+        let set = subset ? bases.filter(base => base.symbol in subset) : bases
+        for (let i=0; i<set.length; i++) {
+          selection.push({'text': set[i].symbol + ' - ' + set[i].name,
+                          'symbol': set[i].symbol
+                         })
+        }
+        return selection
       }
+
       let select_from = {
         placeholder: 'select a currency',
         filter: 'text',
-        options: from
-      }
-      let to = []
-      for (let symbol in quotes) {
-        to.push({'text': symbol + ' - ' + quotes[symbol].name,
-                 'symbol': symbol
-                })
+        options: selectorOptions()
       }
       let select_to = {
         placeholder: 'select a currency',
         filter: 'text',
-        options: to
+        options: selectorOptions(quotes)
       }
 
       let rebase = riot.mount('selector#from',
