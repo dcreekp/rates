@@ -21,3 +21,7 @@ docs/_build/
 
 # Javascript builds
 node_modules/
+
+# Notes
+.todos.json
+NOTES.txt
