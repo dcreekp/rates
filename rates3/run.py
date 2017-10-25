@@ -30,8 +30,8 @@ def run_auto():
         elif popped == '':
             return request.get_response(index)
         else:
-            return request.get_response(index)
-            #return HTTPNotFound()
+            #return request.get_response(index)
+            return HTTPNotFound()
 
 
     run_simple('localhost', 8000, DebuggedApplication(morepath_with_static),
