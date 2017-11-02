@@ -24,4 +24,6 @@ node_modules/
 
 # Notes
 .todos.json
+*.swp
 NOTES.txt
+notes.md

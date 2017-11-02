@@ -21,11 +21,12 @@
     "parallelshell": "^3.0.2",
     "style-loader": "^0.18.2",
     "tag-loader": "^0.3.0",
+    "uglifyjs-webpack-plugin": "^1.0.1",
     "webpack": "^3.8.1",
-    "webpack-dev-server": "^2.9.3"
+    "webpack-dev-server": "^2.9.4"
   },
   "dependencies": {
-    "moment-timezone": "^0.5.13",
+    "moment-timezone": "^0.5.14",
     "riot": "^3.7.3",
     "riot-route": "^3.1.2",
     "whatwg-fetch": "^2.0.3"
