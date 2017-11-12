@@ -5,6 +5,7 @@ import 'whatwg-fetch'
 import './css/blaze.min.css'
 import './tags/current-rates.tag'
 import './tags/select.tag'
+import './tags/display.tag'
 
 
 const bases = [
@@ -48,8 +49,11 @@ var currentRatesCallback = (tag, base, quote = null, amount = null) => {
 
 var currentRates = null
 
-// needs vaidation checks for base quote amount
+// needs validation checks for base quote amount
 
+// defining the routes 
+// it will either mount the current-rates tag or reload it with new data
+// or unmount the tag depending on the information in the url
 route((base, quote, amount) => {
   if (currentRates) {
     currentRates = currentRatesCallback(currentRates, base, quote, amount)

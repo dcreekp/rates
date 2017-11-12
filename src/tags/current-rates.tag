@@ -25,44 +25,62 @@
       <selector id="to" show={ opts.base }></selector>
     </div>
   </div>
+
   <script>
     import route from 'riot-route'
     var now
+
     this.on('mount', () => {
       let d = new Date
       now = new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours())
       now = now.toLocaleDateString() + ' ' + now.toLocaleTimeString()
       //const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      
+      // the currentRatesCallback to get the data from backend
       opts.callback(this, opts.base, opts.quote, opts.amount)
     })
+
+    // what happens when the data is loaded
     this.on('data_loaded', (response) => {
+
+      // collect the data
       const quotes = response.data.quotes,
           bases = response.data.bases,
           quote = response.data.quote,
           amount = response.data.amount;
+      // loads the base into the opts of the tag
       opts.base = response.data.base
-
-      this.convert = () => {
-        this.current.amount = this.refs.amount.value
-        this.current.value = (this.current.amount * this.current.rate)
-        this.tags.display.trigger('display', this.current)
-      }
+ 
+      // current object gets updated with the newly loaded data
       this.current = {
         b_name: quotes[opts.base].name,
         base: opts.base,
         now: now,
       }
 
+      // function to update the current information and then trigger
+      // the display method of the display tag
+      this.convert = () => {
+        this.current.amount = this.refs.amount.value
+        this.current.value = (this.current.amount * this.current.rate)
+        this.tags.display.trigger('display', this.current)
+      }
+
+      // current object gets updated if quote exists
       if (quote) {
         this.current.quoting = quote
         this.current.qg_name = quotes[quote].name
         this.current.rate = quotes[quote].rate
       }
+      // if amount exists the amount is inserted into the inputbox
+      // and the convert function is invoked
       if (amount) {
         this.refs.amount.value = amount * 1
         this.convert()
       }
 
+      // defines a function that returns a selection of the currencies that 
+      // will be included in the 'from' and 'to' dropdown selectors
       const selectorOptions = (subset = null) => {
         let selection = []
         let set = subset ? bases.filter(base => base.symbol in subset) : bases
@@ -74,6 +92,7 @@
         return selection
       }
 
+      // declaring variables with necessary attributes 
       let select_from = {
         placeholder: 'select a currency',
         filter: 'text',
@@ -85,13 +104,20 @@
         options: selectorOptions(quotes)
       }
 
+      // mounts and assigns the 'from' and 'to' dropdown selector
+      // mounts the selector tag with arguments defined above
       let rebase = riot.mount('selector#from',
                               {select:select_from, current: opts.base})
       let quoting = riot.mount('selector#to',
                                {select:select_to, current: quote})
 
+      // updates the current-rates tag, and thus its child tags
       this.update()
 
+      // the 'from' selector will invoke this function when the 'select' event
+      // is triggered
+      // will call for new routes corresponding to the existing information and
+      // the new selection
       rebase[0].on('select', (item) => {
         let selected = item.symbol,
             quote_selected = quoting[0].opts.current,
@@ -105,6 +131,10 @@
         }
       })
 
+      // the 'to' selector will invoke this function when its 'select' event is 
+      // triggered
+      // will call for new routes corresponding to the existing information and
+      // the new selection
       quoting[0].on('select', (item) => {
         let selected = item.symbol,
             amount = this.refs.amount.value;
@@ -116,29 +146,4 @@
       })
     })
   </script>
-
 </current-rates>
-
-<display>
-
-  <h2 show={!opts.value}>{ opts.b_name }</h2>
-  <h3 show={opts.value}>{opts.amount} {opts.b_name} is {opts.value} {opts.q_name}</h3>
-  <p show={!opts.value}>currency exchange calculator</p>
-  <p show={opts.value}>{opts.now}</p>
-
-
-  <script>
-    this.on('display', (current) => {
-      let prop = { style: "currency", currency: current.base}
-      current.amount = (current.amount * 1).toLocaleString('en', prop)
-      current.q_name = current.qg_name
-      prop.currency = current.quoting
-      current.value = (current.value * 1).toLocaleString('en', prop)
-      this.opts = current
-    })
-    this.on('update', () => {
-      this.opts = this.parent.current
-    })
-  </script>
-
-</display>
