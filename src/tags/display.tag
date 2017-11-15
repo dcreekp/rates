@@ -13,9 +13,9 @@
         current.value = '0'
       } else {
         current.amount = (amount).toLocaleString('en', prop)
-        prop.currency = current.quoting
-        current.value = (current.value * 1).toLocaleString('en', prop)
       }
+      prop.currency = current.quoting
+      current.value = (current.value * 1).toLocaleString('en', prop)
       return current
     }
     // the tag invokes this function when its 'display' event is triggered
