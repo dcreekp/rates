@@ -49,8 +49,6 @@ var currentRatesCallback = (tag, base, quote = null, amount = null) => {
 
 var currentRates = null
 
-// needs validation checks for base quote amount
-
 // defining the routes 
 // it will either mount the current-rates tag or reload it with new data
 // or unmount the tag depending on the information in the url

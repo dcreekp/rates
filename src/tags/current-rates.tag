@@ -51,8 +51,12 @@
       const quotes = response.data.quotes,
           bases = response.data.bases,
           base = response.data.base,
-          quote = response.data.quote,
-          amount = response.data.amount;
+          quote = response.data.quote;
+
+      if (!this.refs.amount.value) {
+      this.refs.amount.value = 1
+      }
+
       // loads the base into the opts of the tag
       opts.base = base
  
@@ -73,12 +77,7 @@
 
       // function to invert the base currency with the current quoting currency
       this.invert = () => {
-        let amount = this.refs.amount.value
-        if (amount && quote) {
-          route(quote + '/' + base + '/' + amount)
-        } else if (quote) {
-          route(quote + '/' + base)
-        }
+        route(quote + '/' + base)
       }
 
       // current object gets updated if quote exists
@@ -87,12 +86,9 @@
         this.current.q_name = quotes[quote].name
         this.current.rate = quotes[quote].rate
       }
-      // if amount exists the amount is inserted into the inputbox
-      // and the convert function is invoked
-      if (amount) {
-        this.refs.amount.value = amount * 1
-        this.convert()
-      }
+
+      // invoke the convert function()
+      this.convert()
 
       // defines a function that returns a selection of the currencies that 
       // will be included in the 'from' and 'to' dropdown selectors
@@ -135,11 +131,8 @@
       // the new selection
       rebase[0].on('select', (item) => {
         let selected = item.symbol,
-            quote_selected = quoting[0].opts.current,
-            amount = this.refs.amount.value;
-        if (amount && quote_selected) {
-          route(selected + '/' + quote_selected + '/' + amount)
-        } else if (quote_selected) {
+            quote_selected = quoting[0].opts.current;
+        if (quote_selected) {
           route(selected + '/' + quote_selected)
         } else {
           route(selected)
@@ -151,13 +144,8 @@
       // will call for new routes corresponding to the existing information and
       // the new selection
       quoting[0].on('select', (item) => {
-        let selected = item.symbol,
-            amount = this.refs.amount.value;
-        if (amount) {
-          route(base + '/' + selected + '/' + amount)
-        } else {
-          route(base + '/' + selected)
-        }
+        let selected = item.symbol;
+        route(base + '/' + selected)
       })
     })
   </script>
