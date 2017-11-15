@@ -81,7 +81,7 @@
       // current object gets updated if quote exists
       if (quote) {
         this.current.quoting = quote
-        this.current.qg_name = quotes[quote].name
+        this.current.q_name = quotes[quote].name
         this.current.rate = quotes[quote].rate
       }
       // if amount exists the amount is inserted into the inputbox
