@@ -22,7 +22,7 @@
     this.on('display', (current) => {
       this.opts = display(current)
     })
-    // updates the opts of the tag with the info in the current-rates tag's 
+    // updates the opts of the tag with the info in the current-rates tag's
     // 'current' object
     this.on('update', () => {
       this.opts = this.parent.current
