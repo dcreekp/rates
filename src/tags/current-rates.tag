@@ -8,6 +8,7 @@
              type="text"
              ref="amount"
              placeholder="enter amount"
+             oninput={ convert }
              class="field">
     </div>
     <div class="o-grid__cell">
@@ -18,7 +19,7 @@
              class="c-button c-button--success"
              type="submit"
              ref="button"
-             value="&#8608;"
+             value="&#8644;"
              onclick={ convert }>
     </div>
     <div class="o-grid__cell">
