@@ -29,12 +29,15 @@
 
   <script>
     import route from 'riot-route'
-    var now
+    let now
 
     this.on('mount', () => {
       let d = new Date
-      now = new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours())
-      now = now.toLocaleDateString() + ' ' + now.toLocaleTimeString()
+      now = new Date(
+          d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(),
+          d.getMinutes())
+      now = now.toLocaleDateString() + ' ' + now.toLocaleTimeString(
+          [], {'hour':'2-digit', 'minute': '2-digit', localeMatcher: 'lookup'})
       //const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       
       // the currentRatesCallback to get the data from backend
