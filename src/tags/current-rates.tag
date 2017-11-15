@@ -20,7 +20,7 @@
              type="submit"
              ref="button"
              value="&#8644;"
-             onclick={ convert }>
+             onclick={ invert }>
     </div>
     <div class="o-grid__cell">
       <selector id="to" show={ opts.base }></selector>
@@ -47,15 +47,16 @@
       // collect the data
       const quotes = response.data.quotes,
           bases = response.data.bases,
+          base = response.data.base,
           quote = response.data.quote,
           amount = response.data.amount;
       // loads the base into the opts of the tag
-      opts.base = response.data.base
+      opts.base = base
  
       // current object gets updated with the newly loaded data
       this.current = {
-        b_name: quotes[opts.base].name,
-        base: opts.base,
+        b_name: quotes[base].name,
+        base: base,
         now: now,
       }
 
@@ -65,6 +66,16 @@
         this.current.amount = this.refs.amount.value
         this.current.value = (this.current.amount * this.current.rate)
         this.tags.display.trigger('display', this.current)
+      }
+
+      // function to invert the base currency with the current quoting currency
+      this.invert = () => {
+        let amount = this.refs.amount.value
+        if (amount && quote) {
+          route(quote + '/' + base + '/' + amount)
+        } else if (quote) {
+          route(quote + '/' + base)
+        }
       }
 
       // current object gets updated if quote exists
@@ -108,7 +119,7 @@
       // mounts and assigns the 'from' and 'to' dropdown selector
       // mounts the selector tag with arguments defined above
       let rebase = riot.mount('selector#from',
-                              {select:select_from, current: opts.base})
+                              {select:select_from, current: base})
       let quoting = riot.mount('selector#to',
                                {select:select_to, current: quote})
 
@@ -140,9 +151,9 @@
         let selected = item.symbol,
             amount = this.refs.amount.value;
         if (amount) {
-          route(opts.base + '/' + selected + '/' + amount)
+          route(base + '/' + selected + '/' + amount)
         } else {
-          route(opts.base + '/' + selected)
+          route(base + '/' + selected)
         }
       })
     })
