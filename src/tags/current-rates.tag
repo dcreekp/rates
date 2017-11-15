@@ -31,6 +31,19 @@
     import route from 'riot-route'
     let now
 
+    // defines a function that returns a selection of the currencies that
+    // will be included in the 'from' and 'to' dropdown selectors
+    const selectorOptions = (bases, subset = null) => {
+      let selection = []
+      let set = subset ? bases.filter(base => base.symbol in subset) : bases
+      for (let i=0; i<set.length; i++) {
+        selection.push({'text': set[i].symbol + ' - ' + set[i].name,
+                        'symbol': set[i].symbol
+                       })
+      }
+      return selection
+    }
+
     this.on('mount', () => {
       let d = new Date
       now = new Date(
@@ -39,12 +52,15 @@
       now = now.toLocaleDateString() + ' ' + now.toLocaleTimeString(
           [], {'hour':'2-digit', 'minute': '2-digit', localeMatcher: 'lookup'})
       //const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      
+
       // the currentRatesCallback to get the data from backend
       opts.callback(this, opts.base, opts.quote, opts.amount)
     })
 
-    // what happens when the data is loaded
+    this.on('update', () => {
+      this.convert()
+    })
+
     this.on('data_loaded', (response) => {
 
       // collect the data
@@ -53,13 +69,15 @@
           base = response.data.base,
           quote = response.data.quote;
 
+      // loads the base into the opts of the tag
+      // so that components that don't need conversion value can show early
+      opts.base = base
+
+      // ensures that there is an amount to convert
       if (!this.refs.amount.value) {
       this.refs.amount.value = 1
       }
 
-      // loads the base into the opts of the tag
-      opts.base = base
- 
       // current object gets updated with the newly loaded data
       this.current = {
         b_name: quotes[base].name,
@@ -87,42 +105,27 @@
         this.current.rate = quotes[quote].rate
       }
 
-      // invoke the convert function()
-      this.convert()
-
-      // defines a function that returns a selection of the currencies that 
-      // will be included in the 'from' and 'to' dropdown selectors
-      const selectorOptions = (subset = null) => {
-        let selection = []
-        let set = subset ? bases.filter(base => base.symbol in subset) : bases
-        for (let i=0; i<set.length; i++) {
-          selection.push({'text': set[i].symbol + ' - ' + set[i].name,
-                          'symbol': set[i].symbol
-                         })
-        }
-        return selection
-      }
-
-      // declaring variables with necessary attributes 
+      // declaring variables with necessary attributes
       let select_from = {
         placeholder: 'select a currency',
         filter: 'text',
-        options: selectorOptions()
+        options: selectorOptions(bases)
       }
       let select_to = {
         placeholder: 'select a currency',
         filter: 'text',
-        options: selectorOptions(quotes)
+        options: selectorOptions(bases, quotes)
       }
 
       // mounts and assigns the 'from' and 'to' dropdown selector
-      // mounts the selector tag with arguments defined above
+     // mounts the selector tag with arguments defined above
       let rebase = riot.mount('selector#from',
                               {select:select_from, current: base})
       let quoting = riot.mount('selector#to',
                                {select:select_to, current: quote})
 
       // updates the current-rates tag, and thus its child tags
+      // and also invokes the convert function
       this.update()
 
       // the 'from' selector will invoke this function when the 'select' event
@@ -139,7 +142,7 @@
         }
       })
 
-      // the 'to' selector will invoke this function when its 'select' event is 
+      // the 'to' selector will invoke this function when its 'select' event is
       // triggered
       // will call for new routes corresponding to the existing information and
       // the new selection
