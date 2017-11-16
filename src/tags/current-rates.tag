@@ -57,10 +57,6 @@
       opts.callback(this, opts.base, opts.quote, opts.amount)
     })
 
-    this.on('update', () => {
-      this.convert()
-    })
-
     this.on('data_loaded', (response) => {
 
       // collect the data
@@ -72,11 +68,6 @@
       // loads the base into the opts of the tag
       // so that components that don't need conversion value can show early
       opts.base = base
-
-      // ensures that there is an amount to convert
-      if (!this.refs.amount.value) {
-      this.refs.amount.value = 1
-      }
 
       // current object gets updated with the newly loaded data
       this.current = {
@@ -98,11 +89,17 @@
         route(quote + '/' + base)
       }
 
-      // current object gets updated if quote exists
       if (quote) {
         this.current.quoting = quote
         this.current.q_name = quotes[quote].name
         this.current.rate = quotes[quote].rate
+        // amount defaults to 1 if there is quoting currency
+        if (!this.refs.amount.value) this.refs.amount.value = 1
+        // only invokes this.convert if a quoting currency is selected
+        this.convert()
+      } else {
+        this.current.value = null
+        this.refs.amount.value = null
       }
 
       // declaring variables with necessary attributes
