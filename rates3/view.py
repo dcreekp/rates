@@ -16,8 +16,10 @@ def view_oanda_rates(self, request):
 @App.json(model=model.Openx)
 def view_openx_rates(self, request):
     return {
-        'base': self.base,
-        'rates': self.collect_rates(),
+        'data': {
+            'base': self.base,
+            'quotes': self.quotes,
+            },
         'uri': request.link(self)
         }
 

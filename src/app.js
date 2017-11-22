@@ -35,7 +35,7 @@ const bases = [
 ]
 
 var currentRatesCallback = (tag, base, quote = null, amount = null) => {
-  let url = location.protocol + '//' + location.host + '/api/oanda/' + base;
+  let url = location.protocol + '//' + location.host + '/api/xnepo/' + base;
   fetch(url).then((response) => {
     return response.json();
   }).then((data) => {

@@ -1,6 +1,67 @@
 import requests
 import arrow
 from decimal import Decimal, getcontext
+from .utils import OPENX_CURRENCIES
+
+
+class Openx(object):
+
+    DEFAULT_BASE = 'USD'
+    APP_ID = '7f7b54e590004181abf46b48f766bacb'
+    NAMES = OPENX_CURRENCIES
+
+    LATEST = 'https://openexchangerates.org/api/latest.json'
+    CURRENCY_LIST = 'https://openexchangerates.org/api/currencies.json'
+
+    def __init__(self, base):
+        self.base = base.upper()
+        self.rates = self.collect_rates()
+        self.quotes = self.collect_quotes()
+
+    def collect_rates(self):
+        response = self.api_latest()
+        return response.json()['rates']
+
+    def collect_quotes(self):
+        data = {}
+        for symbol, rate in self.converted_quotes():
+            data[symbol] = {
+                'rate': rate,
+                'name': self.NAMES[symbol]
+                }
+        data[self.base][rate] = 1
+        return data
+
+    def converted_quotes(self):
+        if self.base != self.DEFAULT_BASE:
+            inverse = self.invert_base()
+            for symbol, rate in self.rates.items():
+                yield symbol, self.convert(rate, inverse)
+        else:
+            for symbol, rate in self.rates.items():
+                yield symbol, rate
+
+    def invert_base(self):
+        base_rate = Decimal(self.rates[self.base])
+        getcontext().prec = 6
+        return 1 / base_rate
+
+    def convert(self, a, decimal_b):
+        a = Decimal(a)
+        getcontext().prec = 6
+        return str(a * decimal_b)
+
+    def collect_currency_list(self):
+        response = self.api_currency_list()
+        return response.json()
+
+    def api_currency_list(self):
+        params = {'app_id': self.APP_ID}
+        return requests.get(self.CURRENCY_LIST, params=params)
+
+    def api_latest(self):
+        params = {'app_id': self.APP_ID, 'base': self.DEFAULT_BASE}
+        return requests.get(self.LATEST, params=params)
 
 
 class Oanda(object):
@@ -110,26 +171,4 @@ class Oanda(object):
         getcontext().prec = 6
         inverse = 1 / mid_market
         return inverse
-
-
-class Openx(object):
-
-    ''' resource from openexchangerates need to change query; use historical
-        to get hourly
-    '''
-
-    APP_ID = '7f7b54e590004181abf46b48f766bacb'
-
-    url = 'https://openexchangerates.org/api/latest.json'
-
-    def __init__(self, base):
-        self.base = base.upper()
-
-    def collect_rates(self):
-        response = self.api_call()
-        return response.json()['rates']
-
-    def api_call(self):
-        params = {'app_id': self.APP_ID, 'base': self.base}
-        return requests.get(self.url, params=params)
 

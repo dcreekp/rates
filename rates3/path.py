@@ -6,6 +6,6 @@ from .model import Oanda, Openx
 def get_oanda(base):
     return Oanda(base)
 
-@App.path(model=Openx, path='/openx/{base}/')
+@App.path(model=Openx, path='/xnepo/{base}/')
 def get_openx(base):
     return Openx(base)

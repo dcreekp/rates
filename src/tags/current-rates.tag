@@ -37,7 +37,7 @@
       let selection = []
       let set = subset ? bases.filter(base => base.symbol in subset) : bases
       for (let i=0; i<set.length; i++) {
-        selection.push({'text': set[i].symbol + ' - ' + set[i].name,
+        selection.push({'text': set[i].symbol,
                         'symbol': set[i].symbol
                        })
       }
