@@ -22,15 +22,14 @@ def run_auto():
 
     @webob.dec.wsgify
     def morepath_with_static(request):
-        popped = request.path_info_pop()
-        if popped == 'api':
-            return request.get_response(app)
-        elif popped == 'dist':
-            return request.get_response(dist)
-        elif popped == '':
+        if request.path_info_peek() == '':
             return request.get_response(index)
+        elif request.path_info_peek() == 'api':
+            return request.get_response(app)
+        popped = request.path_info_pop()
+        if popped == 'dist':
+            return request.get_response(dist)
         else:
-            #return request.get_response(index)
             return HTTPNotFound()
 
 
