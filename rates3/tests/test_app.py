@@ -14,12 +14,13 @@ def client():
     return client
 
 def test_oanda(client):
-    root = client.get('/oanda/usd')
-    assert root.status_code == 200
+    response = client.get('/api/oanda/usd')
+    assert response.status_code == 200
 
 def test_openx(client):
-    response = client.get('/openx/usd')
+    response = client.get('/api/xnepo/usd')
     assert response.status_code == 200
+
 
 @pytest.fixture
 def openx_jpy():
@@ -29,18 +30,16 @@ def openx_jpy():
 def openx_usd():
     return model.Openx('usd')
 
-def test_openx_api_call(openx_usd):
-    response = openx_usd.api_call()
+def test_openx_api_latest(openx_usd):
+    response = openx_usd.api_latest()
     assert response.status_code == 200
 
 def test_openx_rates(openx_usd):
     rates = openx_usd.collect_rates()
     assert type(rates) == dict
 
-def test_openx_wrong_base():
-    openx_wrong = model.Openx('joy')
-    response = openx_wrong.api_call()
-    assert response.status_code == 400 or response.status_code == 403
+def test_invert_base(openx_jpy):
+    pass
 
 
 @pytest.fixture

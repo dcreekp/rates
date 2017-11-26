@@ -15,16 +15,17 @@ class Openx(object):
 
     def __init__(self, base):
         self.base = base.upper()
-        self.rates = self.collect_rates()
-        self.quotes = self.collect_quotes()
+
+    def get_quotes(self):
+        return self.collect_quotes(self.collect_rates())
 
     def collect_rates(self):
         response = self.api_latest()
         return response.json()['rates']
 
-    def collect_quotes(self):
+    def collect_quotes(self, rates):
         data = {}
-        for symbol, rate in self.converted_quotes():
+        for symbol, rate in self.convert_rates(rates):
             data[symbol] = {
                 'rate': rate,
                 'name': self.NAMES[symbol]
@@ -32,17 +33,17 @@ class Openx(object):
         data[self.base][rate] = 1
         return data
 
-    def converted_quotes(self):
+    def convert_rates(self, rates):
         if self.base != self.DEFAULT_BASE:
-            inverse = self.invert_base()
-            for symbol, rate in self.rates.items():
+            inverse = self.invert_base(rates)
+            for symbol, rate in rates.items():
                 yield symbol, self.convert(rate, inverse)
         else:
-            for symbol, rate in self.rates.items():
+            for symbol, rate in rates.items():
                 yield symbol, rate
 
-    def invert_base(self):
-        base_rate = Decimal(self.rates[self.base])
+    def invert_base(self, rates):
+        base_rate = Decimal(rates[self.base])
         getcontext().prec = 6
         return 1 / base_rate
 
