@@ -31,16 +31,16 @@
     import route from 'riot-route'
     let now
 
-    // defines a function that returns a selection of the currencies that
-    // will be included in the 'from' and 'to' dropdown selectors
-    const selectorOptions = (bases, subset = null) => {
+    // defines a function that returns a list of the currency symbols to be
+    // included in the 'from' and 'to' dropdown selectors
+    // will need to use js find method to extract the current base quoting
+    // symbol to the top of the list
+    // or put the base or quoting symbol at the top of list with if statement
+    const selectorOptions = (quotes) => {
       let selection = []
-      let set = subset ? bases.filter(base => base.symbol in subset) : bases
-      for (let i=0; i<set.length; i++) {
-        selection.push({'text': set[i].symbol,
-                        'symbol': set[i].symbol
-                       })
-      }
+      Object.keys(quotes).forEach((symbol) => {
+        selection.push({'text': symbol, 'symbol': symbol})
+      })
       return selection
     }
 
@@ -61,7 +61,6 @@
 
       // collect the data
       const quotes = response.data.quotes,
-          bases = response.data.bases,
           base = response.data.base,
           quote = response.data.quote;
 
@@ -106,16 +105,16 @@
       let select_from = {
         placeholder: 'select a currency',
         filter: 'text',
-        options: selectorOptions(bases)
+        options: selectorOptions(quotes)
       }
       let select_to = {
         placeholder: 'select a currency',
         filter: 'text',
-        options: selectorOptions(bases, quotes)
+        options: selectorOptions(quotes)
       }
 
       // mounts and assigns the 'from' and 'to' dropdown selector
-     // mounts the selector tag with arguments defined above
+      // mounts the selector tag with arguments defined above
       let rebase = riot.mount('selector#from',
                               {select:select_from, current: base})
       let quoting = riot.mount('selector#to',
