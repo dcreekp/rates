@@ -27,7 +27,8 @@ setup(
         test=[
             'pytest',
             'webtest',
-            'werkzeug'
+            'werkzeug',
+            'selenium'
         ],
     ),
     entry_points=dict(
