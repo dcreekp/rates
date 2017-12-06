@@ -15,46 +15,38 @@ class Openx(object):
 
     def __init__(self, base):
         self.base = base.upper()
+        self.rates = self.api_latest().json()['rates']
+        self.inverse = self._invert_base(self.rates[self.base])
 
-    def get_quotes(self):
-        return self.collect_quotes(self.collect_rates())
-
-    def collect_rates(self):
-        response = self.api_latest()
-        return response.json()['rates']
-
-    def collect_quotes(self, rates):
+    def collect_quotes(self):
         data = {}
-        for symbol, rate in self.convert_rates(rates):
+        for symbol, rate in self._convert_rates():
             data[symbol] = {
                 'rate': rate,
                 'name': self.NAMES[symbol]
                 }
-        data[self.base][rate] = 1
+        data[self.base]['rate'] = '1'
         return data
 
-    def convert_rates(self, rates):
+    def _convert_rates(self):
         if self.base != self.DEFAULT_BASE:
-            inverse = self.invert_base(rates)
-            for symbol, rate in rates.items():
-                yield symbol, self.convert(rate, inverse)
+            for symbol, rate in self.rates.items():
+                yield symbol, self._convert(rate, self.inverse)
         else:
-            for symbol, rate in rates.items():
-                yield symbol, rate
+            for symbol, rate in self.rates.items():
+                yield symbol, self._convert_default(rate)
 
-    def invert_base(self, rates):
-        base_rate = Decimal(rates[self.base])
+    def _invert_base(self, base):
         getcontext().prec = 6
-        return 1 / base_rate
+        return 1 / Decimal(base)
 
-    def convert(self, a, decimal_b):
-        a = Decimal(a)
+    def _convert(self, a, decimal_b):
         getcontext().prec = 6
-        return str(a * decimal_b)
+        return str(Decimal(a) * decimal_b)
 
-    def collect_currency_list(self):
-        response = self.api_currency_list()
-        return response.json()
+    def _convert_default(self, a):
+        getcontext().prec = 6
+        return str(Decimal(a) * Decimal(1))
 
     def api_currency_list(self):
         params = {'app_id': self.APP_ID}

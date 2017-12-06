@@ -11,41 +11,44 @@ def test_openx(client):
     response = client.get('/api/xnepo/usd')
     assert response.status_code == 200
 
-@pytest.fixture
+@pytest.fixture(scope='module')
 def openx_jpy():
     return model.Openx('jpy')
 
-@pytest.fixture
+@pytest.fixture(scope='module')
 def openx_usd():
     return model.Openx('usd')
 
-def test_openx_api_latest(openx_usd):
+def test_api_currency_list_is_the_same_as_stored_NAMES(openx_usd):
+    assert openx_usd.api_currency_list().json() == openx_usd.NAMES
+    # todo: store currency_list in database, automatic periodic query to restore
+
+def test_api_latest_succeeds(openx_usd):
     response = openx_usd.api_latest()
     assert response.status_code == 200
     assert response.json()['rates'].keys() == OPENX_200['rates'].keys()
 
-def test_openx_convert_rates():
-    pass
+def test_collect_quotes_succeeds(openx_jpy):
+    assert openx_jpy.collect_quotes().keys() == OPENX_200['rates'].keys()
+    assert isinstance(openx_jpy.collect_quotes(), dict)
+    assert set(openx_jpy.collect_quotes()[openx_jpy.base].keys()) == \
+        set(['rate', 'name'])
 
-def test_openx_collect_quotes():
-    pass
+def test_collect_quotes_converts_base_rate_back_to_1(openx_usd, openx_jpy):
+    assert {'rate': '1', 'name': 'United States Dollar'} in \
+        openx_usd.collect_quotes().values()
+    assert {'rate': '1', 'name': 'Japanese Yen'} in \
+        openx_jpy.collect_quotes().values()
 
-def test_openx_collect_rates(openx_usd):
-    rates = openx_usd.collect_rates()
-    assert isinstance(rates, dict)
+def test_invert_base(openx_usd):
+    assert openx_usd._invert_base(OPENX_200['rates']['JPY']) == \
+        Decimal('0.00900812')
+    assert openx_usd._invert_base(OPENX_200['rates']['DKK']) == \
+        Decimal('0.159912')
 
-def test_openx_invert_base(openx_jpy):
-    assert openx_jpy.invert_base(OPENX_200['rates']) == Decimal('0.00900812')
+def test_convert(openx_jpy):
+    assert openx_jpy._convert(3.7502, Decimal('0.00900812')) == '0.0337823'
 
-def test_openx_convert(openx_jpy):
-    assert openx_jpy.convert('3.7502', Decimal('0.00900812')) == '0.0337823'
-
-def test_openx_api_currency_list():
-    pass
-def test_openx_api_currency_list_wrong():
-    pass
-def test_openx_api_latest():
-    pass
-def test_openx_api_latest_wrong():
-    pass
+def test_convert_default(openx_usd):
+    assert openx_usd._convert_default(3.7502) == '3.75020'
 

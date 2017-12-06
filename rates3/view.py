@@ -18,7 +18,7 @@ def view_openx_rates(self, request):
     return {
         'data': {
             'base': self.base,
-            'quotes': self.get_quotes(),
+            'quotes': self.collect_quotes(),
             },
         'uri': request.link(self)
         }

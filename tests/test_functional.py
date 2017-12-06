@@ -58,7 +58,6 @@ def test_reloading_page_does_not_change_the_input_amounts(base_jpy):
     if the rate has changed then the converted value displayed will correspond
     '''
 
-
 def test_base_quoting_flip_button(base_jpy):
     '''
     test that when the flip button is clicked the base currency and quoting
