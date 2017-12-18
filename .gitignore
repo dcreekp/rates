@@ -23,6 +23,9 @@ docs/_build/
 # Javascript builds
 node_modules/
 
+# Keys
+rates3/tokens.py
+
 # Notes
 .todos.json
 *.swp

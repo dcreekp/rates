@@ -1,12 +1,13 @@
 import requests
 from decimal import Decimal, getcontext
 from .utils import OPENX_CURRENCIES
+from .tokens import KEYS
 
 
 class Openx(object):
 
     DEFAULT_BASE = 'USD'
-    APP_ID = '7f7b54e590004181abf46b48f766bacb'
+    APP_ID = KEYS['openx']
     NAMES = OPENX_CURRENCIES
 
     LATEST = 'https://openexchangerates.org/api/latest.json'
