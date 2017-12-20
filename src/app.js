@@ -28,7 +28,7 @@ var currentRates = null
 route((base, quote, amount) => {
   if (currentRates) {
     currentRates = currentRatesCallback(currentRates, base, quote, amount)
-  } else if (!currentRates) {
+  } else if (!currentRates && base) {
     currentRates = riot.mount(
       'current-rates',
       {callback:currentRatesCallback, base:base, quote:quote, amount:amount}

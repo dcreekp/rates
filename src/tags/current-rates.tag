@@ -85,7 +85,7 @@
 
       // function to invert the base currency with the current quoting currency
       this.invert = () => {
-        route(quote + '/' + base)
+        if (quote) route(quote + '/' + base)
       }
 
       if (quote) {
