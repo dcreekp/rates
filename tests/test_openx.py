@@ -20,7 +20,9 @@ def openx_usd():
     return model.Openx('usd')
 
 def test_api_currency_list_is_the_same_as_stored_NAMES(openx_usd):
-    assert openx_usd.api_currency_list().json() == openx_usd.NAMES
+    #assert openx_usd.api_currency_list().json() == openx_usd.NAMES
+    assert set(openx_usd.api_currency_list().json().keys()) == \
+        set(openx_usd.NAMES.keys())
     # todo: store currency_list in database, automatic periodic query to restore
 
 def test_api_latest_succeeds(openx_usd):
