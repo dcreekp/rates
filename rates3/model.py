@@ -49,10 +49,14 @@ class Openx(object):
         return str(Decimal(a) * Decimal(1))
 
     def api_currency_list(self):
-        params = {'app_id': self.APP_ID}
+        params = {'app_id': self.APP_ID, 'show_alternative': True}
         return requests.get(self.CURRENCY_LIST, params=params)
 
     def api_latest(self):
-        params = {'app_id': self.APP_ID, 'base': self.DEFAULT_BASE}
+        params = {
+            'app_id': self.APP_ID,
+            'base': self.DEFAULT_BASE,
+            'show_alternative': True
+            }
         return requests.get(self.LATEST, params=params)
 

@@ -44,9 +44,9 @@ def test_collect_quotes_converts_base_rate_back_to_1(openx_usd, openx_jpy):
 
 def test_invert_base(openx_usd):
     assert openx_usd._invert_base(OPENX_200['rates']['JPY']) == \
-        Decimal('0.00900812')
+        Decimal('0.00890476')
     assert openx_usd._invert_base(OPENX_200['rates']['DKK']) == \
-        Decimal('0.159912')
+        Decimal('0.161720')
 
 def test_convert(openx_jpy):
     assert openx_jpy._convert(3.7502, Decimal('0.00900812')) == '0.0337823'
