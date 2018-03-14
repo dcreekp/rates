@@ -28,9 +28,12 @@ const config = {
     },{
       test: /\.tag$/,
       include: path.resolve(__dirname, 'src/tags'),
-      use: [
-        'tag-loader'
-      ]
+      use: [{
+        loader: 'riot-tag-loader',
+        query: {
+          hot: false,
+        }
+      }]
     }]
   }
 }
