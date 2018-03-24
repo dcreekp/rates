@@ -33,7 +33,7 @@ setup(
     ),
     entry_points=dict(
         console_scripts=[
-            'run-app = rates3.run:run',
+            'rates3 = rates3.run:run_auto',
         ],
     ),
     classifiers=[
